@@ -1,0 +1,63 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  @font-face {
+    font-family: "Roboto";
+    src: url(../../assets/Roboto-Regular.ttf);
+  }
+
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+  }
+  .header h2{
+    color: #2c3e50;
+  }
+    .main { 
+      display: flex;
+      background-color:#ffffff; 
+      align-items: center;
+      justify-content:center;
+    }
+  .container { 
+      text-align: center;
+  }
+  .container ul { 
+      width: 100%;
+      margin: 0 auto;
+  }
+  .container ul li {
+      list-style: none;
+      padding: 15px;
+      margin: 15px;
+      border-radius: 5px;
+      box-shadow: -1px 6px 10px 2px rgba(131, 126, 126, 0.45);
+      width: 100%;
+  }
+  .container ul li a{
+      text-decoration: none;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+  }
+  .container a p {
+      font-size: 25px;
+      color: black;
+  }
+  .footer{
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    height: 80px;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer img {
+    margin: 10px;
+    width: 50px;
+    height: 50px;
+  }
