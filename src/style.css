@@ -16,7 +16,7 @@ body {
 .form {
   position: relative;
   z-index: 1;
-  background: #FFFFFF;
+  background: #3780C1;
   max-width: 360px;
   margin: 50px auto 100px;
   padding: 45px;
@@ -43,18 +43,18 @@ body {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #0362FD;
+  background: #f2f2f2;
   width: 100%;
   border: 0;
   padding: 15px;
-  color: #FFFFFF;
+  color: gray;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
+  transition: all 0.8 ease;
   cursor: pointer;
 }
 .form button:hover,.form button:active,.form button:focus {
-  background: #0314fd;
+  background: #A9A9A9;
 }
 
 

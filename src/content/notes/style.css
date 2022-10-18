@@ -7,3 +7,24 @@
 h2 {
     text-align: center;
 }
+table,
+table td {
+  border: 1px solid #cccccc;
+}
+
+td {
+    height: 50px;
+    width: 160px;
+    text-align: center;
+    vertical-align: middle;
+}
+a{
+    text-align: center;
+    position: absolute;
+    color: #3780C1;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-decoration: none;
+    text-decoration: underline;
+}
