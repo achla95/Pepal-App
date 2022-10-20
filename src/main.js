@@ -1,4 +1,6 @@
 const { invoke } = window.__TAURI__.tauri;
+const { appWindow } = window.__TAURI__.window;
+// const { confirm } = window.__TAURI__.dialog;
 import { Store } from './index.mjs';
 
 let elLoginButton = document.querySelector("#login");
@@ -23,6 +25,5 @@ async function login() {
 if (elLoginButton){
   elLoginButton.addEventListener("click", login); 
 }
-
 
 export {store};
