@@ -15,7 +15,6 @@ const moyenneGenerale = (sum,len) => {
 }
 let username = await store.get('username');
 let password = await store.get('password');
-const notesEl = document.querySelector("#notes");
 const room = await invoke("get_notes", {username : username.value, password : password.value}); 
 
 let sum = 0;
