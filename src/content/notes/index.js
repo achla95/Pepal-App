@@ -29,7 +29,7 @@ room.forEach((element) => {
     elDateTd.textContent = element[0];
     elMatiereTD.textContent = replaceToLong(element[1],10);
     elNoteTd.textContent = element[2];
-    sum += element[2];
+    sum += parseInt(element[2]);
     len+=1;
     elTr.appendChild(elDateTd);
     elTr.appendChild(elMatiereTD);
