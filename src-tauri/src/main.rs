@@ -11,6 +11,16 @@ use chrono;
 
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+
+#[tauri::command]
+async fn get_cookie(username: &str, password: &str) -> Result<String, String> {
+    let login_info: HashMap<&str,&str> = HashMap::from([("login", username), ("pass", password)]);
+    let client = reqwest::Client::builder().cookie_store(true).build().map_err(|e| e.to_string())?;
+    let req = client.post("https://www.pepal.eu/include/php/ident.php").form(&login_info).send().await.map_err(|e| e.to_string())?;
+    let get_cookie = req.headers().get("set-cookie").unwrap().to_str().unwrap().to_string();
+    let cookie = get_cookie.split(";").collect::<Vec<&str>>()[0].to_string();
+    Ok(cookie)
+}
 #[tauri::command]
 async fn get_name(username: &str, password : &str) -> Result<String,String> {
     let mut login_info: HashMap<&str,&str> = HashMap::new();
@@ -28,13 +38,9 @@ async fn get_name(username: &str, password : &str) -> Result<String,String> {
 
 }
 #[tauri::command]
-async fn get_notes(username: &str, password: &str) -> Result<Vec<Vec<String>>, String> { 
-    let mut login_info: HashMap<&str,&str> = HashMap::new();
-    login_info.insert("login", username);
-    login_info.insert("pass", password);
-    let client = reqwest::Client::builder().cookie_store(true).build().map_err(|e| e.to_string())?;
-    client.post("https://www.pepal.eu/include/php/ident.php").form(&login_info).send().await.map_err(|e| e.to_string())?;
-    let req = client.get("https://www.pepal.eu/?my=notes").send().await.map_err(|e| e.to_string())?;
+async fn get_notes(cookie: &str) -> Result<Vec<Vec<String>>, String> { 
+    let client = reqwest::Client::builder().build().map_err(|e| e.to_string())?;
+    let req = client.get("https://www.pepal.eu/?my=notes").header("Cookie", cookie).send().await.map_err(|e| e.to_string())?;
     let body = req.text().await.map_err(|e| e.to_string())?;
     let parsed_html = Html::parse_fragment(&body);
     let selector = &Selector::parse("tr.note_devoir").unwrap();
@@ -49,13 +55,9 @@ async fn get_notes(username: &str, password: &str) -> Result<Vec<Vec<String>>, S
     Ok(notes)
 }
 #[tauri::command]
-async fn get_room(username: &str, password : &str) -> Result<String,String> {
-    let mut login_info: HashMap<&str,&str> = HashMap::new();
-    login_info.insert("login", username);
-    login_info.insert("pass", password);
-    let client = reqwest::Client::builder().cookie_store(true).build().map_err(|e| e.to_string())?;
-    client.post("https://www.pepal.eu/include/php/ident.php").form(&login_info).send().await.map_err(|e| e.to_string())?;
-    let req = client.get("https://www.pepal.eu/?my=edt").send().await.map_err(|e| e.to_string())?;
+async fn get_room(cookie: &str) -> Result<String,String> {
+    let client = reqwest::Client::builder().build().map_err(|e| e.to_string())?;
+    let req = client.get("https://www.pepal.eu/?my=edt").header("Cookie", cookie).send().await.map_err(|e| e.to_string())?;
     let body = req.text().await.map_err(|e| e.to_string())?;
     
     let parsed_html = Html::parse_fragment(&body);
@@ -96,7 +98,7 @@ async fn get_room(username: &str, password : &str) -> Result<String,String> {
 fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
-        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room])
+        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
