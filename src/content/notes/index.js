@@ -13,14 +13,13 @@ const moyenneGenerale = (sum,len) => {
     }
     return sum/len;
 }
-let username = await store.get('username');
-let password = await store.get('password');
-const room = await invoke("get_notes", {username : username.value, password : password.value}); 
+let cookie = await store.get('cookie');
+const notes = await invoke("get_notes", {cookie : cookie.value}); 
 
 let sum = 0;
 let len = 0;
 const elTbody = document.querySelector("tbody");
-room.forEach((element) => {
+notes.forEach((element) => {
     const elTr = document.createElement("tr");
     elTbody.appendChild(elTr);
     const elDateTd = document.createElement("td");
