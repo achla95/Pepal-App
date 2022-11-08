@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "pepal-app",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -59,7 +59,8 @@
         "height": 465,
         "resizable": false,
         "title": "Pepal App",
-        "width": 450
+        "width": 450,
+        "center": true
       }
     ]
   }

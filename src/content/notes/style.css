@@ -18,7 +18,7 @@ td {
     text-align: center;
     vertical-align: middle;
 }
-a{
+/* a{
     text-align: center;
     position: absolute;
     color: #3780C1;
@@ -27,4 +27,32 @@ a{
     padding: 15px 0;
     text-decoration: none;
     text-decoration: underline;
-}
+ */
+
+#footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:60px;
+  }
+  
+  .footer-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+  }
+  .footer-content a{
+    margin-right: 10px;
+    color: #3780C1;
+    text-decoration: none;
+    text-decoration: underline;
+  }
+  .footer-content button{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #3780C1;
+  }
