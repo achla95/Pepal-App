@@ -3,11 +3,12 @@
     windows_subsystem = "windows"
 )]
 use std::collections::HashMap;
+use regex::Regex;
 use scraper::{Html,Selector};
 use reqwest;
 use serde_json::Value;
 use tauri_plugin_store::PluginBuilder;
-use chrono;
+use chrono::{self, Local, NaiveTime};
 
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -95,10 +96,52 @@ async fn get_room(cookie: &str) -> Result<String,String> {
     }
     Ok(salles)
 }
+#[tauri::command]
+async fn set_presence(cookie: &str) -> Result<(),String> {
+    let client = reqwest::Client::builder().build().map_err(|e| e.to_string())?;
+    let resp = client.get("https://www.pepal.eu/presences").header("Cookie", cookie).send().await.map_err(|e| e.to_string())?; // récupère la page des notes  
+    let body = resp.text().await.map_err(|e| e.to_string())?;
+    let re = Regex::new("<td><a href=\"(.*?)\" class=\"btn btn-primary\"><i class=\"icon wb-list\"></i> <span class=\"hidden-sm-down\">Relevé de présence</span></a></td>").unwrap();
+
+    let test = re.captures_iter(&body)
+    .map(|story| {
+        story[1].to_string()
+    }).collect::<Vec<_>>();
+    // println!("{:?}",test); // voir si tout se passe bien
+    let presence_id = test.iter()
+        .map(|element| {
+            element.split("/")
+            .skip(3).collect::<Vec<_>>()
+        }).collect::<Vec<Vec<_>>>();
+    // println!("{:?}",presence_id); /: refer to l.64
+    let mut param = HashMap::new();
+    param.insert("act", "set_present"); // to set présent
+    let seance_pk_idx = if is_past_noon() { // get seance id morning/after-noon
+        println!("id de l'aprem");
+        1
+    } else {
+        println!("id du matin");
+        0
+    };
+    param.insert("seance_pk", presence_id[seance_pk_idx][0]);
+    println!("{:?}",param);
+
+    client.post("https://www.pepal.eu/student/upload.php").form(&param).send().await.map_err(|e| e.to_string())?; //valider la présence 
+    Ok(())
+}
+fn is_past_noon() -> bool{
+    let time_of_day = Local::now().time();
+    let past_noon = NaiveTime::from_hms(12, 0, 0);
+    if time_of_day > past_noon{
+        true
+    }else{
+        false
+    }
+}
 fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
-        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie])
+        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie,set_presence])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
