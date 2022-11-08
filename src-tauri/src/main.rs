@@ -127,6 +127,7 @@ async fn set_presence(cookie: &str) -> Result<(),String> {
     println!("{:?}",param);
 
     client.post("https://www.pepal.eu/student/upload.php").form(&param).send().await.map_err(|e| e.to_string())?; //valider la présence 
+    //return true or false if presence is set
     Ok(())
 }
 fn is_past_noon() -> bool{
