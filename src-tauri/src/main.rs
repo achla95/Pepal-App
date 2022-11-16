@@ -107,21 +107,17 @@ async fn set_presence(cookie: &str) -> Result<(),String> {
     .map(|story| {
         story[1].to_string()
     }).collect::<Vec<_>>();
-    // println!("{:?}",test); // voir si tout se passe bien
     let presence_id = test.iter()
         .map(|element| {
             element.split("/")
             .skip(3).collect::<Vec<_>>()
         }).collect::<Vec<Vec<_>>>();
-    // println!("{:?}",presence_id); /: refer to l.64
     let mut param = HashMap::new();
     param.insert("act", "set_present"); // to set présent
     let seance_pk_idx = if is_past_noon() { // get seance id morning/after-noon
-        println!("id de l'aprem");
-        1
+        1 //"id de l'aprem"
     } else {
-        println!("id du matin");
-        0
+        0 //"id de l'matin"
     };
     param.insert("seance_pk", presence_id[seance_pk_idx][0]);
     println!("{:?}",param);
