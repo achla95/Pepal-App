@@ -57,4 +57,12 @@ body {
   background: #A9A9A9;
 }
 
+.incorrect-login {
+  text-align: center;
+  color: red;
+  display: none;
+}
 
+.show {
+  display: block;
+}

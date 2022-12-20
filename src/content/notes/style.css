@@ -7,6 +7,11 @@
 h2 {
     text-align: center;
 }
+.table-set {
+  height: 380px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
 table,
 table td {
   border: 1px solid #cccccc;
@@ -18,16 +23,6 @@ td {
     text-align: center;
     vertical-align: middle;
 }
-/* a{
-    text-align: center;
-    position: absolute;
-    color: #3780C1;
-    bottom: 0;
-    width: 100%;
-    padding: 15px 0;
-    text-decoration: none;
-    text-decoration: underline;
- */
 
 #footer {
     position:absolute;
