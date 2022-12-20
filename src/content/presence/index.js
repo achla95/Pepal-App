@@ -11,10 +11,17 @@ roomEl.forEach((el) =>{
 
 const checkIfCourse = () => {
     if (room === "Pas de cours !") {
+        let cancel_morning = document.querySelector("#matin");
+        cancel_morning.style.pointerEvents = "none";
+        let cancel_noon = document.querySelector("#midi");
+        // it's not really clear (i'm cheating a little bit but fix coming soon)
+        cancel_noon.style.pointerEvents = "none";
+
         return false;
     }
     return true;
 }
+checkIfCourse();
 
 
 let morning = document.querySelector("#matin");
