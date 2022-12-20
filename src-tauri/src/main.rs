@@ -9,8 +9,8 @@ use reqwest;
 use serde_json::Value;
 use tauri_plugin_store::PluginBuilder;
 use chrono::{self, Local, NaiveTime};
-
-
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayEvent};
+use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 #[tauri::command]
@@ -128,7 +128,7 @@ async fn set_presence(cookie: &str) -> Result<(),String> {
 }
 fn is_past_noon() -> bool{
     let time_of_day = Local::now().time();
-    let past_noon = NaiveTime::from_hms(12, 0, 0);
+    let past_noon = NaiveTime::from_hms_opt(12, 0, 0).unwrap();
     if time_of_day > past_noon{
         true
     }else{
@@ -136,7 +136,57 @@ fn is_past_noon() -> bool{
     }
 }
 fn main() {
+    let quit = CustomMenuItem::new("quit", "Quit");
+    let hide = CustomMenuItem::new("hide", "Hide");
+    let show = CustomMenuItem::new("show", "Show");
+    let tray_menu = SystemTrayMenu::new()
+        .add_item(quit)
+        .add_item(hide)
+        .add_item(show);
     tauri::Builder::default()
+        .system_tray(SystemTray::new().with_menu(tray_menu))
+        .on_system_tray_event(|app, event| match event {
+        SystemTrayEvent::LeftClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a left click");  
+        }
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a right click");
+        }
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a double click");
+        }
+        SystemTrayEvent::MenuItemClick { id, .. } => {
+            match id.as_str() {
+            "quit" => {
+                std::process::exit(0);
+            }
+            "hide" => {
+                println!("hide");
+                let window = app.get_window("main").unwrap();
+                window.hide().unwrap();
+            }
+            "show" => {
+                println!("show");
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+            }
+            _ => {}
+            }
+        }
+        _ => {}
+        })
         .plugin(PluginBuilder::default().build())
         .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie,set_presence])
         .run(tauri::generate_context!())
