@@ -10,8 +10,6 @@ async function login() {
   let password = document.querySelector("#password").value;
   let is_correct = await invoke("get_name", {username : username, password : password});
   if (is_correct === "") {
-    console.log("incorrect login");
-    
     return;
   }else {
     const cookie =  await invoke("get_cookie", {username : username, password : password});
