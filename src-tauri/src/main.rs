@@ -13,6 +13,14 @@ use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayEvent};
 use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
+
+// basically I have to implement a temporary database, so I can store the username and password to update cookie
+#[tauri::command]
+async fn refresh_cookie() -> Result<(), String> {
+    println!("functions called !");
+    Ok(())
+}
+
 #[tauri::command]
 async fn get_cookie(username: &str, password: &str) -> Result<String, String> {
     let login_info: HashMap<&str,&str> = HashMap::from([("login", username), ("pass", password)]);
@@ -146,27 +154,6 @@ fn main() {
     tauri::Builder::default()
         .system_tray(SystemTray::new().with_menu(tray_menu))
         .on_system_tray_event(|app, event| match event {
-        SystemTrayEvent::LeftClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("system tray received a left click");  
-        }
-        SystemTrayEvent::RightClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("system tray received a right click");
-        }
-        SystemTrayEvent::DoubleClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("system tray received a double click");
-        }
         SystemTrayEvent::MenuItemClick { id, .. } => {
             match id.as_str() {
             "quit" => {
@@ -188,7 +175,7 @@ fn main() {
         _ => {}
         })
         .plugin(PluginBuilder::default().build())
-        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie,set_presence])
+        .invoke_handler(tauri::generate_handler![get_notes,get_name,get_room,get_cookie,set_presence,refresh_cookie])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
